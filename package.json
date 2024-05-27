@@ -1,0 +1,41 @@
+{
+  "name": "swift-dynamics-nextjs",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "lint": "next lint",
+    "start": "next start",
+    "migrateToLocize": "locize migrate --project-id=01b2e5e8-6243-47d1-b36f-963dbb8bcae3 --api-key=c9805cd1-fd50-4d98-967a-383b39066de8 --path=./app/i18n/locales",
+    "downloadLocales": "locize download --project-id=01b2e5e8-6243-47d1-b36f-963dbb8bcae3 --ver=latest --clean=true --path=./app/i18n/locales && npm run i18next-resources-for-ts",
+    "syncLocales": "locize sync --project-id=01b2e5e8-6243-47d1-b36f-963dbb8bcae3 --api-key=bd8cb856-d6b3-4c82-a456-862c729a1674 --ver=latest --path=./app/i18n/locales --dry=true",
+    "i18next-resources-for-ts": "i18next-resources-for-ts interface -i ./app/i18n/locales/en -o ./@types/resources.d.ts"
+  },
+  "dependencies": {
+    "@ant-design/cssinjs": "^1.20.0",
+    "@ant-design/nextjs-registry": "^1.0.0",
+    "accept-language": "3.0.18",
+    "antd": "^5.17.4",
+    "i18next": "23.9.0",
+    "i18next-browser-languagedetector": "7.2.0",
+    "i18next-resources-to-backend": "1.2.0",
+    "next": "14.1.0",
+    "react": "18.2.0",
+    "react-cookie": "7.0.2",
+    "react-dom": "18.2.0",
+    "react-i18next": "14.0.5"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "7.23.10",
+    "@types/node": "20.11.19",
+    "@types/react": "18.2.57",
+    "@typescript-eslint/eslint-plugin": "7.0.2",
+    "@typescript-eslint/parser": "7.0.2",
+    "eslint": "8.56.0",
+    "eslint-config-next": "14.1.0",
+    "i18next-resources-for-ts": "1.5.0",
+    "locize-cli": "8.0.0",
+    "typescript": "5.3.3"
+  }
+}
