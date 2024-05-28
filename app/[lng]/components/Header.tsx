@@ -17,7 +17,6 @@ type Props = {
 export const Header = (props: Props) => {
   const router = useRouter()
   const { lng, path = '', heading, backBtn } = props
-  console.log(path)
   const handleChange = (value: string) => {
     if(lng !== value) {
       router.push(`/${value}${path}`)
