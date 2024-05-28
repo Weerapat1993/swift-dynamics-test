@@ -1,8 +1,11 @@
 'use client'
 import React, { useState } from 'react';
-import { Button, Table } from 'antd';
-import type { TableColumnsType } from 'antd';
+import { Button, Table, Popconfirm, message, Row, Col, Tooltip, Flex } from 'antd';
+import type { PopconfirmProps, TableColumnsType } from 'antd';
 import { useTranslation } from '../../../i18n/client';
+import { useEmployeeList } from '../hooks/useEmployeeList';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import CreateEmployeeModalForm from './CreateEmployeeModalForm';
 
 interface DataType {
   key: React.Key;
@@ -19,66 +22,139 @@ type Props = {
   params: Params,
 }
 
-const columns: TableColumnsType<DataType> = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-  },
-  {
-    title: 'Gender',
-    dataIndex: 'gender',
-  },
-  {
-    title: 'Telephone',
-    dataIndex: 'telephone',
-  },
-];
-
-const data: DataType[] = [];
-for (let i = 0; i < 20; i++) {
-  data.push({
-    key: i,
-    name: `Edward King ${i}`,
-    gender: 'M',
-    telephone: `Test ${i}`,
-  });
-}
-
 const DataTable = (props: Props) => {
-  const { params: { lng } } = props
+  const { params } = props
+  const { lng } = params
+  const { list, deleteEmployeeByListId } = useEmployeeList()
   const { t } = useTranslation(lng, 'form')
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<Boolean>(false);
 
-  const start = () => {
-    setLoading(true);
-    // ajax request after empty completing
-    setTimeout(() => {
-      setSelectedRowKeys([]);
-      setLoading(false);
-    }, 1000);
-  };
+  const getGenderName = (char: string) => {
+    switch(char) {
+      case 'M':
+        return t('form.radio.male')
+      case 'F':
+        return t('form.radio.female')
+      default:
+        return t('form.radio.unspecified')
+    }
+  }
+
+  const data = list.map((item) => ({
+    key: item.id,
+    name: `${item.firstname} ${item.lastname}`,
+    gender: getGenderName(item.gender),
+    telephone: item.telephone
+  }))
+
+  const columns: TableColumnsType<DataType> = [
+    {
+      title: 'Name',
+      key: 'name',
+      dataIndex: 'name',
+      sorter: (a: any, b: any) => a.name - b.name,
+    },
+    {
+      title: 'Gender',
+      key: 'gender',
+      dataIndex: 'gender',
+      sorter: (a: any, b: any) => a.gender - b.gender,
+    },
+    {
+      title: 'Telephone',
+      key: 'telephone',
+      dataIndex: 'telephone',
+      sorter: (a: any, b: any) => a.name - b.name,
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      width: '120px',
+      render: (_, item) => (
+        <Flex wrap gap="small">
+          <Tooltip title={t('form.btn.edit')}>
+            <Button shape="circle" icon={<EditOutlined />} />
+          </Tooltip>
+          <Popconfirm
+            title="Delete the task"
+            description="Are you sure to delete this task?"
+            onConfirm={() => confirmByRow(item.key)}
+            onCancel={() => null}
+            okText={t('form.btn.yes')}
+            cancelText={t('form.btn.no')}
+          >
+            <Tooltip title={t('form.btn.delete')}>
+              <Button shape="circle" type='primary' danger icon={<DeleteOutlined />} />
+            </Tooltip>
+          </Popconfirm>
+        </Flex>
+      ),
+    },
+  ];
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
+  };
+
+  const deleteCompleted = (keys: number[]) => {
+    setLoading(true)
+    setTimeout(() => {
+      deleteEmployeeByListId(keys)
+      message.success('Confirm delete employee!');
+      setSelectedRowKeys([])
+      setLoading(false)
+    }, 1000)
+  }
+
+  const confirm: PopconfirmProps['onConfirm'] = (e) => {
+    deleteCompleted(selectedRowKeys)
+  };
+
+  const confirmByRow = (id: number) => {
+    deleteCompleted([id])
+  };
+  
+  const cancel: PopconfirmProps['onCancel'] = (e) => {
+    message.error('Cancel delete employee!');
   };
 
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
   };
+
   const hasSelected = selectedRowKeys.length > 0;
 
   return (
     <div>
       <div style={{ marginBottom: 16 }}>
-        <Button type="primary" danger onClick={start} disabled={!hasSelected} loading={loading}>
-          {t('form.btn.delete')}
-        </Button>
-        <span style={{ marginLeft: 8 }}>
-          {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
-        </span>
+        <Row>
+          <Col span={12}>
+            {hasSelected ? (
+              <>
+                <Popconfirm
+                  title="Delete the task"
+                  description="Are you sure to delete this task?"
+                  onConfirm={confirm}
+                  onCancel={cancel}
+                  okText={t('form.btn.yes')}
+                  cancelText={t('form.btn.no')}
+                >
+                  <Button type="primary" danger icon={<DeleteOutlined />} disabled={!hasSelected} loading={loading}>
+                    {t('form.btn.delete')}
+                  </Button>
+                </Popconfirm>
+                <span style={{ marginLeft: 8 }}>
+                  {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
+                </span>
+              </>
+            ) : null}
+          </Col>
+          <Col span={12}>
+            <CreateEmployeeModalForm params={params} />
+          </Col>
+        </Row>
       </div>
       <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
     </div>

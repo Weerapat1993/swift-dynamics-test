@@ -6,7 +6,6 @@ interface RHFDatePickerFieldProps {
   control: Control<any>
 	name: string
 	placeholder?: string
-
 }
 
 const RHFDatePickerField = (props: RHFDatePickerFieldProps) => {

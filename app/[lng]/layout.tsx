@@ -1,6 +1,7 @@
 import { dir } from 'i18next'
 import { languages, fallbackLng } from '../i18n/settings'
 import { useTranslation } from '../i18n'
+import { Providers } from "../redux/provider";
 import './global.css'
 
 export async function generateStaticParams() {
@@ -36,7 +37,9 @@ export default function RootLayout({
     <html lang={lng} dir={dir(lng)}>
       <head />
       <body>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   )

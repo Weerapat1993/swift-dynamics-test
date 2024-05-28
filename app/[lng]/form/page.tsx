@@ -1,7 +1,7 @@
 import { languages, fallbackLng } from '../../i18n/settings'
 import { useTranslation } from '../../i18n'
 import { Header } from '../components/Header'
-import { DataTable, SheetForm } from "./components"
+import { DataTable } from "./components"
 
 type Params = {
   lng: 'en' | 'th'
@@ -22,7 +22,7 @@ const Page = async (props: Props) => {
         <Header heading={t('h1')} lng={lng} path='/form' backBtn={t('backBtn')} />
         {typeof t === undefined ? null : (
           <>
-            <SheetForm params={params} />
+            {/* <SheetForm params={params} /> */}
             <DataTable params={params} />
           </>
           )

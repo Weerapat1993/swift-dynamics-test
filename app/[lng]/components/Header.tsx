@@ -27,7 +27,7 @@ export const Header = (props: Props) => {
   };
   return (
     <>
-      <Row>
+      <Row style={{ marginBottom: '1em' }}>
         <Col span={12}>
           <Title style={{ margin: 0 }} level={2}>{heading}</Title>
         </Col>

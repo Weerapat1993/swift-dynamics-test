@@ -20,7 +20,11 @@ interface Resources {
       "btn": {
         "reset": "Reset",
         "submit": "Submit",
-        "delete": "Delete"
+        "delete": "Delete",
+        "create": "Create",
+        "edit": "Edit",
+        "yes": "Yes",
+        "no": "No"
       }
     }
   },
