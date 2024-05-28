@@ -4,8 +4,9 @@ import { Button, Table, Popconfirm, message, Row, Col, Tooltip, Flex } from 'ant
 import type { PopconfirmProps, TableColumnsType } from 'antd';
 import { useTranslation } from '../../../i18n/client';
 import { useEmployeeList } from '../hooks/useEmployeeList';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined } from '@ant-design/icons';
 import CreateEmployeeModalForm from './CreateEmployeeModalForm';
+import UpdateEmployeeModalFormById from './UpdateEmployeeModalFormById';
 
 interface DataType {
   key: React.Key;
@@ -25,7 +26,7 @@ type Props = {
 const DataTable = (props: Props) => {
   const { params } = props
   const { lng } = params
-  const { list, deleteEmployeeByListId } = useEmployeeList()
+  const { list, keys, ids, deleteEmployeeByListId } = useEmployeeList()
   const { t } = useTranslation(lng, 'form')
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState<Boolean>(false);
@@ -73,9 +74,10 @@ const DataTable = (props: Props) => {
       width: '120px',
       render: (_, item) => (
         <Flex wrap gap="small">
-          <Tooltip title={t('form.btn.edit')}>
+          {/* <Tooltip title={t('form.btn.edit')}>
             <Button shape="circle" icon={<EditOutlined />} />
-          </Tooltip>
+          </Tooltip> */}
+          <UpdateEmployeeModalFormById params={params} id={item.key} />
           <Popconfirm
             title="Delete the task"
             description="Are you sure to delete this task?"
@@ -128,6 +130,8 @@ const DataTable = (props: Props) => {
 
   return (
     <div>
+      <pre>{JSON.stringify(ids, null, '  ')}</pre>
+      <pre>{JSON.stringify(keys, null, '  ')}</pre>
       <div style={{ marginBottom: 16 }}>
         <Row>
           <Col span={12}>

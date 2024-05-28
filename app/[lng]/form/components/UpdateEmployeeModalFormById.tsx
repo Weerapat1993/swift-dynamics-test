@@ -1,9 +1,9 @@
 "use client"
-import React, { useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
+import React, { useMemo, useState } from 'react';
+import { EditOutlined } from '@ant-design/icons';
 import { useForm } from "react-hook-form"
 import { useTranslation } from '../../../i18n/client'
-import { Button, Flex, Form, Input, Radio, Row, Modal } from 'antd';
+import { Button, Flex, Form, Input, Radio, Row, Modal, Tooltip } from 'antd';
 import type { FormProps } from 'antd';
 import RHFDatePickerField from './RHFDatePickerField';
 import { useEmployeeList } from '../hooks/useEmployeeList';
@@ -17,30 +17,36 @@ type Params = {
 
 type Props = {
   params: Params,
+  id: number | string
 }
 
-const CreateEmployeeModalForm = (props: Props) => {
-    const { params: { lng }} = props
-	const { createEmployee } = useEmployeeList()
+const UpdateEmployeeModalFormById = (props: Props) => {
+  const { params: { lng }, id } = props
+	const { updateEmployeeById, keys } = useEmployeeList()
+  const data = keys?.[id]
 	const { t } = useTranslation(lng, 'form')
 	const {
 		register,
 		control,
 		reset,
-		watch,
-	} = useForm<FieldType>()
+		watch
+	} = useForm<FieldType>({
+		defaultValues: useMemo(() => {
+			return data;
+	}, [data])
+	})
 
-	const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-		if(watch('birthdate')) {
-			values.birthdate = watch('birthdate').format('YYYY-MM-DD')
+	const onFinish: FormProps<FieldType>['onFinish'] = (fieldValues) => {
+		const values = {
+			id,
+			...fieldValues,
 		}
 		setConfirmLoading(true);
 		setTimeout(() => {
-			createEmployee(values)
-			reset()
-            setOpen(false);
-            setConfirmLoading(false);
-        }, 1000);
+			updateEmployeeById(values)
+			setOpen(false);
+			setConfirmLoading(false);
+		}, 1000);
 	};
 
 	const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
@@ -57,6 +63,7 @@ const CreateEmployeeModalForm = (props: Props) => {
 
   const showModal = () => {
     setOpen(true);
+		reset(data, { keepDirtyValues: true });
   };
 
   const handleCancel = () => {
@@ -64,12 +71,12 @@ const CreateEmployeeModalForm = (props: Props) => {
   };
 
   return (
-    <Row justify="end">
-      <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
-        {t('form.btn.create')}
-      </Button>
+    <>
+			<Tooltip title={t('form.btn.edit')}>
+				<Button shape="circle" icon={<EditOutlined />} onClick={showModal} />
+			</Tooltip>
       <Modal
-        title="Create Employee"
+        title="Update Employee"
 				centered
         open={open}
         confirmLoading={confirmLoading}
@@ -87,6 +94,7 @@ const CreateEmployeeModalForm = (props: Props) => {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
         >
+						<Input type="hidden" {...register("id")} />
             <Form.Item<FieldType>
                 label={t('form.firstname')}
                 name="firstname"
@@ -120,11 +128,13 @@ const CreateEmployeeModalForm = (props: Props) => {
                     message: 'Please input your ID card!',
                 }]}
             >
-                <Input maxLength={13} {...register("id_card", {
+                <Input
+									maxLength={13} 
+									{...register("id_card", {
                     pattern: {
-                        value: /^(\d{13})?$/,
-                        message: 'Invalid ID Card Format'
-                    } 
+										value: /^(\d{13})?$/,
+										message: 'Invalid ID Card Format'
+                  } 
                 })} />
             </Form.Item>
             <Form.Item<FieldType>
@@ -172,8 +182,8 @@ const CreateEmployeeModalForm = (props: Props) => {
             </Form.Item>
         </Form>
       </Modal>
-    </Row>
+    </>
   );
 };
 
-export default CreateEmployeeModalForm;
+export default UpdateEmployeeModalFormById;

@@ -1,12 +1,12 @@
-import { Employee } from "@/app/[lng]/form/@types/Employee";
+
 import { createSlice } from "@reduxjs/toolkit";
 
 type EmployeeState = {
-  data: Employee[]
+  keys: Object
 };
 
 const initialState = {
-  data: []
+  keys: {},
 } as EmployeeState;
 
 export const employee = createSlice({
@@ -15,17 +15,22 @@ export const employee = createSlice({
   reducers: {
     init: () => initialState,
     addEmployee: (state, action) => {
-			const keys = state.data.map(item => item.id)
-			const initialKeys = [0, ...keys]
+      const ids = Object.keys(state.keys)
+			const initialKeys = [0, ...ids]
 			const id = Math.max(...initialKeys) + 1
 			const generateData = {
 				id,
 				...action.payload
 			}
-      state.data.push(generateData)
+      state.keys[id] = generateData
+    },
+    editEmployeeById: (state, action) => {
+      state.keys[action.payload.id] = action.payload
     },
 		removeEmployeeByListId: (state, action) => {
-			state.data = state.data.filter((item) => !action.payload.includes(item.id));
+      (action.payload || []).forEach(key => {
+        delete state.keys[key]
+      });
 		}
   },
 });
@@ -34,6 +39,7 @@ export const {
   init,
   addEmployee,
 	removeEmployeeByListId,
+  editEmployeeById,
 } = employee.actions;
 export default employee.reducer;
 
