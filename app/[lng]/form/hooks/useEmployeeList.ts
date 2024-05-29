@@ -1,4 +1,4 @@
-import { addEmployee, removeEmployeeByListId, editEmployeeById } from "@/app/redux/features/employeeSlice";
+import { addEmployee, removeEmployeeByListId, editEmployeeById, getEmployeeDataFromLocalStorage } from "@/app/redux/features/employeeSlice";
 import { useAppDispatch, useAppSelector } from "@/app/redux/hooks";
 import { Employee } from "../@types/Employee";
 
@@ -7,6 +7,10 @@ export const useEmployeeList = () => {
     const ids = Object.keys(keys)
     const list = ids.map(key => keys?.[key])
     const dispatch = useAppDispatch();
+
+    const getEmployee = () => {
+        dispatch(getEmployeeDataFromLocalStorage())
+    }
 
     const createEmployee = (payload: any[]) => {
         dispatch(addEmployee(payload))
@@ -27,5 +31,6 @@ export const useEmployeeList = () => {
         createEmployee,
         updateEmployeeById,
         deleteEmployeeByListId,
+        getEmployee,
     }
 }

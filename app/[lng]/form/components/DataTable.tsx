@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Table, Popconfirm, message, Row, Col, Tooltip, Flex } from 'antd';
 import type { PopconfirmProps, TableColumnsType } from 'antd';
 import { useTranslation } from '../../../i18n/client';
@@ -26,10 +26,17 @@ type Props = {
 const DataTable = (props: Props) => {
   const { params } = props
   const { lng } = params
-  const { list, keys, ids, deleteEmployeeByListId } = useEmployeeList()
+  const { list, deleteEmployeeByListId, getEmployee } = useEmployeeList()
   const { t } = useTranslation(lng, 'form')
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState<Boolean>(false);
+
+
+  useEffect(() => {
+    if(!list.length) {
+      getEmployee()
+    }
+  }, [])
 
   const getGenderName = (char: string) => {
     switch(char) {
@@ -74,9 +81,6 @@ const DataTable = (props: Props) => {
       width: '120px',
       render: (_, item) => (
         <Flex wrap gap="small">
-          {/* <Tooltip title={t('form.btn.edit')}>
-            <Button shape="circle" icon={<EditOutlined />} />
-          </Tooltip> */}
           <UpdateEmployeeModalFormById params={params} id={item.key} />
           <Popconfirm
             title="Delete the task"
@@ -130,8 +134,6 @@ const DataTable = (props: Props) => {
 
   return (
     <div>
-      <pre>{JSON.stringify(ids, null, '  ')}</pre>
-      <pre>{JSON.stringify(keys, null, '  ')}</pre>
       <div style={{ marginBottom: 16 }}>
         <Row>
           <Col span={12}>

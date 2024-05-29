@@ -1,5 +1,5 @@
 "use client"
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { EditOutlined } from '@ant-design/icons';
 import { useForm } from "react-hook-form"
 import { useTranslation } from '../../../i18n/client'
@@ -29,12 +29,15 @@ const UpdateEmployeeModalFormById = (props: Props) => {
 		register,
 		control,
 		reset,
-		watch
 	} = useForm<FieldType>({
 		defaultValues: useMemo(() => {
 			return data;
 	}, [data])
 	})
+
+  useEffect(() => {
+    reset(data);
+  }, [])
 
 	const onFinish: FormProps<FieldType>['onFinish'] = (fieldValues) => {
 		const values = {
@@ -63,7 +66,7 @@ const UpdateEmployeeModalFormById = (props: Props) => {
 
   const showModal = () => {
     setOpen(true);
-		reset(data, { keepDirtyValues: true });
+		reset(data);
   };
 
   const handleCancel = () => {
