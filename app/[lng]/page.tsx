@@ -1,6 +1,7 @@
 import { languages, fallbackLng } from '../i18n/settings'
 import { useTranslation } from '../i18n'
 import { Header } from './components/Header'
+import Content from './components/Content';
 
 export default async function Page({ params: { lng } }: {
   params: {
@@ -14,6 +15,7 @@ export default async function Page({ params: { lng } }: {
     <>
       <main>
         <Header heading={t('h1')} lng={lng} backBtn={t('backBtn')} />
+        <Content />
       </main>
     </>
   )
