@@ -3,7 +3,7 @@
 ### Checklist
 
 - [ ] Assignment 1 (Incomplete)
-- [ ] Assignment 2 (Incomplete)
+- [x] Assignment 2
 
 ### How to Install
 ```sh
@@ -32,3 +32,6 @@ yarn dev
    - [ ] จัดการข้อมูลทั้ง Create, Edit และ Delete ลงบน Local Storage (เมื่อ Refesh หน้าเว็บไซต์ข้อมูลต้องไม่หายไป)
    - [x] ใช้ Redux-toolkit จัดการข้อมูลของฟอร์ม แทน useState
    - [x] ตารางต้องมี Pagination, sorting และสามารถเลือกลบตามแต่ละรายการได้
+
+### Result
+![Result](image.png)
