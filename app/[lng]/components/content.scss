@@ -1,0 +1,58 @@
+.my-container {
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+.my-button-cycle {
+    border-radius: 100px;
+    padding: 10px 12px;
+    background: #eee;
+    cursor: pointer;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    border: 0;
+    &:hover {
+        background: orange;
+    }
+    &:active {
+        border: solid 0px rgba(0, 0, 0, 0.2);
+    }
+}
+
+.my-button {
+    border-radius: 10px;
+    padding: 10px 20px;
+    background: #eee;
+    cursor: pointer;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    border: 0;
+    &:hover {
+        background: orange;
+    }
+    &:active {
+        border: solid 0px rgba(0, 0, 0, 0.2);
+    }
+}
+
+.bg-color-A {
+    background-color: #ff9AA2;
+}
+.bg-color-B {
+    background-color: #ffb7b2;
+}
+.bg-color-C {
+    background-color: #ffdac1;
+}
+.bg-color-D {
+    background-color: #e2f048;
+}
+.bg-color-E {
+    background-color: #b5ea07;
+}
+.bg-color-F {
+    background-color: #c7ceea;
+}
+
+.my-space {
+    margin-top: 10px;
+}

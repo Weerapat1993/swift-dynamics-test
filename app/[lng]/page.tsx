@@ -3,11 +3,16 @@ import { useTranslation } from '../i18n'
 import { Header } from './components/Header'
 import Content from './components/Content';
 
-export default async function Page({ params: { lng } }: {
-  params: {
-    lng: string;
-  };
-}) {
+type Params = {
+  lng: 'en' | 'th'
+}
+
+type Props = {
+  params: Params,
+}
+
+export default async function Page(props: Props) {
+  let { lng } = props.params
   if (languages.indexOf(lng) < 0) lng = fallbackLng
   const { t } = await useTranslation(lng)
 
@@ -15,7 +20,7 @@ export default async function Page({ params: { lng } }: {
     <>
       <main>
         <Header heading={t('h1')} lng={lng} backBtn={t('backBtn')} />
-        <Content />
+        <Content params={props.params} />
       </main>
     </>
   )

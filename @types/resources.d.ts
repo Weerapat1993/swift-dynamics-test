@@ -31,7 +31,8 @@ interface Resources {
   "translation": {
     "h1": "Layout & Style",
     "title": "Home",
-    "backBtn": "Form"
+    "backBtn": "Form",
+    "movePosition": "Move Position"
   }
 }
 
